@@ -8,8 +8,8 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/superoo7/go-gecko/format"
-	"github.com/superoo7/go-gecko/v3/types"
+	"github.com/sentioxyz/go-gecko/format"
+	"github.com/sentioxyz/go-gecko/v3/types"
 )
 
 const defaultBaseURL = "https://api.coingecko.com/api/v3"
