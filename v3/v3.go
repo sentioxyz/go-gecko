@@ -85,10 +85,22 @@ func (c *Client) Ping(ctx context.Context) (*types.Ping, error) {
 
 // SimpleSinglePrice /simple/price  Single ID and Currency (ids, vs_currency)
 func (c *Client) SimpleSinglePrice(ctx context.Context, id string, vsCurrency string) (*types.SimpleSinglePrice, error) {
+	return c.SimpleSinglePriceWithDate(ctx, id, vsCurrency, "")
+}
+
+// SimplePrice /simple/price Multiple ID and Currency (ids, vs_currencies)
+func (c *Client) SimplePrice(ctx context.Context, ids []string, vsCurrencies []string) (*map[string]map[string]float32, error) {
+	return c.SimplePriceWithDate(ctx, ids, vsCurrencies, []string{""})
+}
+
+// SimpleSinglePriceWithDate /simple/price  Single ID and Currency (ids, vs_currency)
+func (c *Client) SimpleSinglePriceWithDate(ctx context.Context,
+	id string, vsCurrency string, date string) (*types.SimpleSinglePrice, error) {
 	idParam := []string{strings.ToLower(id)}
 	vcParam := []string{strings.ToLower(vsCurrency)}
+	dataParam := []string{strings.ToLower(date)}
 
-	t, err := c.SimplePrice(ctx, idParam, vcParam)
+	t, err := c.SimplePriceWithDate(ctx, idParam, vcParam, dataParam)
 	if err != nil {
 		return nil, err
 	}
@@ -100,14 +112,16 @@ func (c *Client) SimpleSinglePrice(ctx context.Context, id string, vsCurrency st
 	return data, nil
 }
 
-// SimplePrice /simple/price Multiple ID and Currency (ids, vs_currencies)
-func (c *Client) SimplePrice(ctx context.Context, ids []string, vsCurrencies []string) (*map[string]map[string]float32, error) {
+// SimplePriceWithDate /simple/price Multiple ID and Currency (ids, vs_currencies)
+func (c *Client) SimplePriceWithDate(ctx context.Context,
+	ids []string, vsCurrencies []string, dates []string) (*map[string]map[string]float32, error) {
 	params := url.Values{}
 	idsParam := strings.Join(ids[:], ",")
 	vsCurrenciesParam := strings.Join(vsCurrencies[:], ",")
 
 	params.Add("ids", idsParam)
 	params.Add("vs_currencies", vsCurrenciesParam)
+	params.Add("date", dates[0])
 
 	url := fmt.Sprintf("%s/simple/price?%s", c.baseURL, params.Encode())
 	resp, err := c.MakeReq(ctx, url)
