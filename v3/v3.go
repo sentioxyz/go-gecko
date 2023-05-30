@@ -381,3 +381,21 @@ func (c *Client) Global(ctx context.Context) (*types.Global, error) {
 	}
 	return &data.Data, nil
 }
+
+// CoinsInfo /coins/{id}
+func (c *Client) CoinInfo(ctx context.Context, id string) (*types.CoinInfo, error) {
+	if len(id) == 0 {
+		return nil, fmt.Errorf("id is required")
+	}
+	url := fmt.Sprintf("%s/coins/%s", c.baseURL, id)
+	resp, err := c.MakeReq(ctx, url)
+	if err != nil {
+		return nil, err
+	}
+	var data *types.CoinInfo
+	err = json.Unmarshal(resp, &data)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}

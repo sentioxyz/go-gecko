@@ -119,3 +119,34 @@ type ExchangeRatesResponse struct {
 type GlobalResponse struct {
 	Data Global `json:"data"`
 }
+
+type Platforms struct {
+	Ethereum string `json:"ethereum"`
+}
+
+type DetailPlatforms struct {
+	Ethereum DetailPlatform `json:"ethereum"`
+}
+
+type DetailPlatform struct {
+	ContractAddress string `json:"contract_address"`
+	DecimalPlace    int    `json:"decimal_place"`
+}
+
+type Image struct {
+	Thumb string `json:"thumb"`
+	Small string `json:"small"`
+	Large string `json:"large"`
+}
+
+// CoinInfo https://api.coingecko.com/api/v3/coins/aave-usdc
+type CoinInfo struct {
+	Id                 string          `json:"id"`
+	Symbol             string          `json:"symbol"`
+	Name               string          `json:"name"`
+	Platforms          Platforms       `json:"platforms"`
+	DetailPlatforms    DetailPlatforms `json:"detail_platforms"`
+	BlockTimeInMinutes int             `json:"block_time_in_minutes"`
+	Categories         []string        `json:"categories"`
+	Image              Image           `json:"image"`
+}
