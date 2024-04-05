@@ -19,7 +19,9 @@ const defaultBaseURL = "https://api.coingecko.com/api/v3"
 type Client struct {
 	httpClient *http.Client
 
-	baseURL string
+	baseURL       string
+	authHeaderKey string
+	apiKey        string
 }
 
 // NewClient create new client object
@@ -32,6 +34,13 @@ func NewClientWithBaseURL(httpClient *http.Client, baseURL string) *Client {
 		httpClient = http.DefaultClient
 	}
 	return &Client{httpClient: httpClient, baseURL: baseURL}
+}
+
+func NewClientWithURLAndAuth(httpClient *http.Client, baseURL, authHeaderKey, apiKey string) *Client {
+	if httpClient == nil {
+		httpClient = http.DefaultClient
+	}
+	return &Client{httpClient: httpClient, baseURL: baseURL, authHeaderKey: authHeaderKey, apiKey: apiKey}
 }
 
 // helper
@@ -55,9 +64,11 @@ func doReq(req *http.Request, client *http.Client) ([]byte, error) {
 // MakeReq HTTP request helper
 func (c *Client) MakeReq(ctx context.Context, url string) ([]byte, error) {
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
-
 	if err != nil {
 		return nil, err
+	}
+	if c.authHeaderKey != "" && c.apiKey != "" {
+		req.Header.Add(c.authHeaderKey, c.apiKey)
 	}
 	resp, err := doReq(req, c.httpClient)
 	if err != nil {
