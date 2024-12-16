@@ -410,3 +410,20 @@ func (c *Client) CoinInfo(ctx context.Context, id string) (*types.CoinInfo, erro
 	}
 	return data, nil
 }
+
+func (c *Client) CoinGeneralInfo(ctx context.Context, id string) (*types.CoinGeneralInfo, error) {
+	if len(id) == 0 {
+		return nil, fmt.Errorf("id is required")
+	}
+	url := fmt.Sprintf("%s/coins/%s", c.baseURL, id)
+	resp, err := c.MakeReq(ctx, url)
+	if err != nil {
+		return nil, err
+	}
+	var data *types.CoinGeneralInfo
+	err = json.Unmarshal(resp, &data)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}

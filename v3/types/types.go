@@ -150,3 +150,9 @@ type CoinInfo struct {
 	Categories         []string        `json:"categories"`
 	Image              Image           `json:"image"`
 }
+
+type CoinGeneralInfo struct {
+	CoinInfo
+	Platforms       map[string]string         `json:"platforms"`
+	DetailPlatforms map[string]DetailPlatform `json:"detail_platforms"`
+}
